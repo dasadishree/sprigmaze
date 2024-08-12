@@ -2,6 +2,7 @@ const player = "p"
 const box = "b"
 const goal = "g"
 const wall = "w"
+const enemy = "e"
 
 //creates the design of each element
 setLegend(
@@ -58,7 +59,24 @@ HH00H000000H00HH
 3033330333303333
 0000000000000000
 3333033330333303`
-  ]
+  ],
+  [enemy, bitmap`
+................
+..44........44..
+...44......44...
+...444....444...
+...4444444444...
+..44DD4444DD44..
+.44444D44D44444.
+..440044440044..
+...4000440004...
+...4400440044...
+....44444444....
+....44000044....
+.....404404.....
+......4444......
+.......44.......
+................`]
 );
 
 //levels and maps
@@ -66,26 +84,36 @@ let level = 0;
 
 const levels = [
     map`
-..g
+e.g
 .w.
 p..`,
     map`
 ...
-.wg
+.eg
 .pw`,
      map`
-gww
+gew
 ..w
 w.p`,
   map`
 p.w.
 w...
 ..wg
-.www`,
+ewww`,
+   map`
+p.we
+.wg.
+.ww.
+....`,
+   map`
+p.wg
+w...
+..ww
+w..e`,
     map`
 .....
 .wwgw
-...ww
+..eww
 .wwpw
 .....`,
     map`
@@ -94,18 +122,18 @@ p..w..
 .ww.wg
 ww....
 ...ww.
-.w..ww`,
+.w.eww`,
     map`
 ......
 .ww.w.
-..w.wg
+..wewg
 ..wwww
 w.....
 ...wwp`,
   map`
 p....wg
 ..ww.w.
-...w...
+..ew...
 wwww.w.
 .....w.
 .www.ww
@@ -143,7 +171,9 @@ setSolids([player, wall]);
 afterInput(() => {
     const numberCovered = tilesWith(goal, player).length;
     const targetNumber = tilesWith(goal).length;
-
+    const numCovered = tilesWith(enemy, player).length;
+    const targetNum = tilesWith(enemy).length;
+  
     if (numberCovered === targetNumber) {
         // increase the current level number
         level = level + 1;
@@ -157,10 +187,18 @@ afterInput(() => {
             addText("you win!", { y: 4, color: color`8` });
         }
     }
+    if(numCovered === targetNum){
+      console.log("Game over!");
+      addText("Game Over", { x: 5, y: 7, color: color`3` });
+      setTimeout(() => {
+      }, 2000);
+    }
 });
+
 
 //restart
 onInput("j", () => {
     const currentLevel = levels[level];
     if (currentLevel !== undefined) setMap(currentLevel);
 });
+
